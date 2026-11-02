@@ -1,0 +1,30 @@
+name: Go CLI CI
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build for Linux
+        run: GOOS=linux GOARCH=amd64 go build -o my-go-cli-linux main.go
+
+      - name: Build for Windows
+        run: GOOS=windows GOARCH=amd64 go build -o my-go-cli-windows.exe main.go
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-cli-binaries
+          path: |
+            my-go-cli-linux
+            my-go-cli-windows.exe
